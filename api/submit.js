@@ -1,14 +1,17 @@
-// pages/api/submit.js
+import formidable from "formidable";
+import fs from "fs";
+import path from "path";
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, push } from "firebase/database";
 
-// ปิด bodyParser = false เพราะเราจะใช้ JSON ปกติ
+// ปิด bodyParser ของ Next.js
 export const config = {
   api: {
-    bodyParser: true,
+    bodyParser: false,
   },
 };
 
+// Firebase config (ใส่ค่า config จริง)
 const firebaseConfig = {
   apiKey: "AIzaSyBHgpqApo8nL3yL4aTkT0wutpb6sgRIs7M",
   authDomain: "permit-app-4969b.firebaseapp.com",
@@ -27,16 +30,31 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
 
-  const { fullname, phone, location } = req.body;
+  const form = formidable({
+    maxFileSize: 5 * 1024 * 1024, // เผื่อกลับมาใส่ไฟล์ในอนาคต
+  });
 
-  const savedData = {
-    fullname,
-    phone,
-    location,
-    date: new Date().toISOString(),
-  };
+  form.parse(req, async (err, fields) => {
+    if (err) {
+      console.error("❌ error parsing form:", err);
+      return res.status(500).json({ message: "เกิดข้อผิดพลาด" });
+    }
 
-  await push(ref(db, "requests"), savedData);
+    const savedData = {
+      fullname: fields.fullname,
+      phone: fields.phone,
+      location: fields.location,
+      file: null,
+      date: new Date().toISOString(),
+    };
 
-  res.status(200).json({ message: "✅ ส่งคำขอสำเร็จ" });
+    try {
+      await push(ref(db, "requests"), savedData);
+      console.log("✅ บันทึกข้อมูลสำเร็จ:", savedData);
+      res.status(200).json({ message: "✅ ส่งคำขอสำเร็จ" });
+    } catch (e) {
+      console.error("❌ Firebase Error:", e);
+      res.status(500).json({ message: "เกิดข้อผิดพลาดในการบันทึก" });
+    }
+  });
 }
