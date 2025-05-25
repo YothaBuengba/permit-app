@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
@@ -53,70 +53,77 @@
     รายการคำขออนุญาตก่อสร้าง อบต.บึงบา
   </div>
 
-  <div class="log-container" id="logContainer">
+  <div style="text-align: center; margin: 20px;">
+    <button id="deleteAllBtn" style="background-color: red; color: white; padding: 10px; border: none; border-radius: 6px;">
+      🗑️ ล้างข้อมูลทั้งหมด
+    </button>
+  </div>
+
+  <div id="dataContainer" class="log-container">
     <p>กำลังโหลดข้อมูล...</p>
   </div>
 
-  <!-- Firebase -->
-<!-- ปุ่มล้างข้อมูลทั้งหมด -->
-<div style="text-align: center; margin-bottom: 20px;">
-  <button onclick="deleteAllData()" style="background-color: red; color: white; padding: 10px;">ล้างข้อมูลทั้งหมด</button>
-</div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-<!-- รายการข้อมูล -->
-<div id="dataContainer"></div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHgpqApo8nL3yL4aTkT0wutpb6sgRIs7M",
+      authDomain: "permit-app-4969b.firebaseapp.com",
+      databaseURL: "https://permit-app-4969b-default-rtdb.firebaseio.com",
+      projectId: "permit-app-4969b",
+      storageBucket: "permit-app-4969b.appspot.com", // ✅ แก้ตรงนี้
+      messagingSenderId: "721297118613",
+      appId: "1:721297118613:web:7ff76a2f258db68e0b529c",
+      measurementId: "G-Z5NR3MD7TZ"
+    };
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const dataRef = ref(db, "permit-requests");
 
-  const firebaseConfig = {
-  apiKey: "AIzaSyBHgpqApo8nL3yL4aTkT0wutpb6sgRIs7M",
-  authDomain: "permit-app-4969b.firebaseapp.com",
-  databaseURL: "https://permit-app-4969b-default-rtdb.firebaseio.com",
-  projectId: "permit-app-4969b",
-  storageBucket: "permit-app-4969b.firebasestorage.app",
-  messagingSenderId: "721297118613",
-  appId: "1:721297118613:web:7ff76a2f258db68e0b529c",
-  measurementId: "G-Z5NR3MD7TZ"
-};
+    onValue(dataRef, (snapshot) => {
+      const dataContainer = document.getElementById("dataContainer");
+      dataContainer.innerHTML = "";
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  const dataRef = ref(db, "permit-requests");
+      if (!snapshot.exists()) {
+        dataContainer.innerHTML = "<p style='color:gray;'>ไม่มีข้อมูลคำขอ</p>";
+        return;
+      }
 
-  onValue(dataRef, (snapshot) => {
-    const dataContainer = document.getElementById("dataContainer");
-    dataContainer.innerHTML = ""; // เคลียร์ของเก่าก่อน
+      snapshot.forEach((child) => {
+        const val = child.val();
+        const key = child.key;
 
-    snapshot.forEach((child) => {
-      const val = child.val();
-      const key = child.key;
+        const card = document.createElement("div");
+        card.classList.add("log-entry");
+        card.innerHTML = `
+          <p><strong>ชื่อ:</strong> ${val.name}</p>
+          <p><strong>เบอร์โทร:</strong> ${val.phone}</p>
+          <p><strong>ที่อยู่:</strong> ${val.address}</p>
+          <p><strong>วันที่:</strong> ${val.timestamp}</p>
+        `;
 
-      const card = document.createElement("div");
-      card.style = "background:white; margin:10px auto; padding:20px; border-radius:8px; max-width:600px; box-shadow:0 0 8px rgba(0,0,0,0.1)";
-      card.innerHTML = `
-        <p><strong>ชื่อ:</strong> ${val.name}</p>
-        <p><strong>เบอร์โทร:</strong> ${val.phone}</p>
-        <p><strong>ที่อยู่:</strong> ${val.address}</p>
-        <p><strong>วันที่:</strong> ${val.timestamp}</p>
-        <button onclick="deleteEntry('${key}')" style="background-color: #e74c3c; color:white; padding:6px 10px;">ลบรายการนี้</button>
-      `;
-      dataContainer.appendChild(card);
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "🗑️ ลบรายการนี้";
+        deleteBtn.style = "background-color: #e74c3c; color:white; padding:6px 10px; border: none; border-radius: 4px; margin-top: 10px;";
+        deleteBtn.addEventListener("click", () => {
+          if (confirm("ยืนยันลบรายการนี้?")) {
+            remove(ref(db, "permit-requests/" + key));
+          }
+        });
+
+        card.appendChild(deleteBtn);
+        dataContainer.appendChild(card);
+      });
     });
-  });
 
-  // ฟังก์ชันลบรายการเดี่ยว
-  window.deleteEntry = function (key) {
-    if (confirm("ยืนยันลบรายการนี้?")) {
-      remove(ref(db, "permit-requests/" + key));
-    }
-  }
+    document.getElementById("deleteAllBtn").addEventListener("click", () => {
+      if (confirm("คุณแน่ใจหรือไม่ว่าต้องการล้างข้อมูลทั้งหมด?")) {
+        remove(dataRef);
+      }
+    });
+  </script>
 
-  // ฟังก์ชันล้างข้อมูลทั้งหมด
-  window.deleteAllData = function () {
-    if (confirm("คุณแน่ใจหรือไม่ว่าต้องการล้างข้อมูลทั้งหมด?")) {
-      remove(dataRef);
-    }
-  }
-</script>
+</body>
+</html>
