@@ -13,7 +13,7 @@
 
     .center-title {
       text-align: center;
-      margin-top: 80px;
+      margin-top: 40px;
       font-size: 26px;
       font-weight: bold;
       color: #2c3e50;
@@ -22,6 +22,29 @@
     .center-title::before {
       content: "📋 ";
     }
+
+    .log-container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .log-entry {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+
+    .log-entry strong {
+      display: inline-block;
+      width: 120px;
+    }
   </style>
 </head>
 <body>
@@ -29,6 +52,39 @@
   <div class="center-title">
     รายการคำขออนุญาตก่อสร้าง อบต.บึงบา
   </div>
+
+  <div class="log-container" id="logContainer">
+    <p>กำลังโหลดข้อมูล...</p>
+  </div>
+
+  <script>
+    fetch('/api/get-logs')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('logContainer');
+        container.innerHTML = ''; // ล้างข้อความ "กำลังโหลด..."
+
+        if (data.length === 0) {
+          container.innerHTML = "<p>ยังไม่มีรายการคำขอ</p>";
+          return;
+        }
+
+        data.forEach((item, index) => {
+          const div = document.createElement("div");
+          div.className = "log-entry";
+          div.innerHTML = `
+            <strong>ชื่อ:</strong> ${item.fullname}<br/>
+            <strong>เบอร์โทร:</strong> ${item.phone}<br/>
+            <strong>ที่อยู่:</strong> ${item.location}<br/>
+            <strong>แนบไฟล์:</strong> ${item.document || '-'}<br/>
+          `;
+          container.appendChild(div);
+        });
+      })
+      .catch(err => {
+        document.getElementById('logContainer').innerHTML = "<p>เกิดข้อผิดพลาดในการโหลดข้อมูล</p>";
+      });
+  </script>
 
 </body>
 </html>
