@@ -98,10 +98,10 @@
         const card = document.createElement("div");
         card.classList.add("log-entry");
         card.innerHTML = `
-          <p><strong>ชื่อ:</strong> ${val.name}</p>
-          <p><strong>เบอร์โทร:</strong> ${val.phone}</p>
-          <p><strong>ที่อยู่:</strong> ${val.address}</p>
-          <p><strong>วันที่:</strong> ${val.timestamp}</p>
+          <p><strong>ชื่อ:</strong> ${val["ชื่อ"]}</p>
+          <p><strong>เบอร์โทร:</strong> ${val["เบอร์โทรศัพท์"]}</p>
+          <p><strong>ที่อยู่:</strong> ${val["ที่อยู่"]}</p>
+          <p><strong>วันที่:</strong> ${val["วันที่"]}</p>
         `;
 
         const deleteBtn = document.createElement("button");
