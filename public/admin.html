@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title>รายการคำขออนุญาตก่อสร้าง อบต.บึงบา</title>
+  <title>รายการคำขออนุญาตก่อสร้าง ดัดแปลง รื้อถอน หรือเคลื่อนย้ายอาคาร องค์การบริหารส่วนตำบลบึงบา</title>
   <style>
     body {
       font-family: "Segoe UI", sans-serif;
@@ -50,7 +50,7 @@
 <body>
 
   <div class="center-title">
-    รายการคำขออนุญาตก่อสร้าง อบต.บึงบา
+    รายการคำขออนุญาตก่อสร้าง ดัดแปลง รื้อถอน หรือเคลื่อนย้ายอาคาร องค์การบริหารส่วนตำบลบึงบา
   </div>
 
   <div style="text-align: center; margin: 20px;">
@@ -80,7 +80,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const dataRef = ref(db, "permit-requests");
+    const dataRef = ref(db, "requests");
 
     onValue(dataRef, (snapshot) => {
       const dataContainer = document.getElementById("dataContainer");
