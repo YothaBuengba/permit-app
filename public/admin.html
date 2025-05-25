@@ -97,19 +97,19 @@
 
         const card = document.createElement("div");
         card.classList.add("log-entry");
-        card.innerHTML = `
-          <p><strong>ชื่อ:</strong> ${val["ชื่อ"]}</p>
-          <p><strong>เบอร์โทร:</strong> ${val["เบอร์โทรศัพท์"]}</p>
-          <p><strong>ที่อยู่:</strong> ${val["ที่อยู่"]}</p>
-          <p><strong>วันที่:</strong> ${val["วันที่"]}</p>
-        `;
+      card.innerHTML = `
+  <p><strong>ชื่อ:</strong> ${Object.values(val.fullname || {})[0] || "-"}</p>
+  <p><strong>เบอร์โทร:</strong> ${Object.values(val.phone || {})[0] || "-"}</p>
+  <p><strong>ที่อยู่:</strong> ${Object.values(val.location || {})[0] || "-"}</p>
+  <p><strong>วันที่:</strong> ${val.date ? new Date(val.date).toLocaleString("th-TH") : "-"}</p>
+`;
 
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "🗑️ ลบรายการนี้";
         deleteBtn.style = "background-color: #e74c3c; color:white; padding:6px 10px; border: none; border-radius: 4px; margin-top: 10px;";
         deleteBtn.addEventListener("click", () => {
           if (confirm("ยืนยันลบรายการนี้?")) {
-            remove(ref(db, "permit-requests/" + key));
+            remove(ref(db, "requests/" + key));
           }
         });
 
