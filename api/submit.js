@@ -1,45 +1,42 @@
-import formidable from "formidable";
-import { initializeApp, applicationDefault } from "firebase-admin/app";
-import { getDatabase } from "firebase-admin/database";
+// pages/api/submit.js
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, push } from "firebase/database";
 
-const app = initializeApp({
-  credential: applicationDefault(),
-  databaseURL: "https://permit-app-4969b-default-rtdb.firebaseio.com"
-});
-
+// ปิด bodyParser = false เพราะเราจะใช้ JSON ปกติ
 export const config = {
   api: {
-    bodyParser: false,
+    bodyParser: true,
   },
 };
 
-export default function handler(req, res) {
+const firebaseConfig = {
+  apiKey: "AIzaSyBHgpqApo8nL3yL4aTkT0wutpb6sgRIs7M",
+  authDomain: "permit-app-4969b.firebaseapp.com",
+  databaseURL: "https://permit-app-4969b-default-rtdb.firebaseio.com",
+  projectId: "permit-app-4969b",
+  storageBucket: "permit-app-4969b.appspot.com",
+  messagingSenderId: "721297118613",
+  appId: "1:721297118613:web:7ff76a2f258db68e0b529c"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
 
-  const form = formidable({ keepExtensions: true });
+  const { fullname, phone, location } = req.body;
 
-  form.parse(req, async (err, fields, files) => {
-    if (err) {
-      console.error("❌ Error parsing form:", err);
-      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการส่งข้อมูล" });
-    }
+  const savedData = {
+    fullname,
+    phone,
+    location,
+    date: new Date().toISOString(),
+  };
 
-    const savedData = {
-      fullname: fields.fullname,
-      phone: fields.phone,
-      location: fields.location,
-      timestamp: Date.now()
-    };
+  await push(ref(db, "requests"), savedData);
 
-    try {
-      const db = getDatabase();
-      await db.ref("requests").push(savedData);
-      res.status(200).json({ message: "✅ ส่งคำขอสำเร็จ" });
-    } catch (err) {
-      console.error("❌ Firebase Error:", err);
-      res.status(500).json({ message: "เกิดข้อผิดพลาดในการบันทึก Firebase" });
-    }
-  });
+  res.status(200).json({ message: "✅ ส่งคำขอสำเร็จ" });
 }

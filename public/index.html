@@ -113,9 +113,6 @@
         <label for="location">ที่อยู่ของสถานที่ก่อสร้าง</label>
         <textarea id="location" name="location" required></textarea>
 
-        <label for="document">แนบเอกสาร (PDF หรือรูปภาพ)</label>
-        <input type="file" id="document" name="document" required>
-
         <button type="submit">📬 ส่งคำขอ</button>
     </form>
 </div>
@@ -124,22 +121,24 @@
 document.getElementById('permit-form').addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const form = document.getElementById('permit-form');
-    const formData = new FormData(form);
+    const data = {
+        fullname: document.getElementById('fullname').value,
+        phone: document.getElementById('phone').value,
+        location: document.getElementById('location').value,
+    };
 
     try {
         const res = await fetch("/api/submit", {
             method: "POST",
-            body: formData
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
         });
 
         const result = await res.json();
         alert(result.message || "❌ ส่งคำขอไม่สำเร็จ");
     } catch (err) {
-        alert("เกิดข้อผิดพลาดในการส่งคำขอ");
+        alert("❌ เกิดข้อผิดพลาดในการส่งคำขอ");
     }
 });
-</script>
-
-</body>
-</html>
