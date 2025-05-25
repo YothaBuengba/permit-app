@@ -2,37 +2,33 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title>หลังบ้านดูคำขอ</title>
+  <title>รายการคำขออนุญาตก่อสร้าง อบต.บึงบา</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    .entry { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    .center-title {
+      text-align: center;
+      margin-top: 80px;
+      font-size: 26px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .center-title::before {
+      content: "📋 ";
+    }
   </style>
 </head>
 <body>
-  <h1>📋 รายการคำขอ</h1>
-  <div id="log-container"></div>
 
-  <script>
-    async function loadLogs() {
-      const res = await fetch('/api/get-logs');
-      const data = await res.json();
+  <div class="center-title">
+    รายการคำขออนุญาตก่อสร้าง อบต.บึงบา
+  </div>
 
-      const container = document.getElementById('log-container');
-      container.innerHTML = '';
-
-      data.logs.forEach((entry, i) => {
-        container.innerHTML += `
-          <div class="entry">
-            <strong>ชื่อ:</strong> ${entry.fullname}<br>
-            <strong>โทร:</strong> ${entry.phone}<br>
-            <strong>ที่อยู่:</strong> ${entry.location}<br>
-            <strong>ไฟล์:</strong> ${entry.document}<br>
-          </div>
-        `;
-      });
-    }
-
-    loadLogs();
-  </script>
 </body>
 </html>
