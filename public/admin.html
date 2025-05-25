@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
@@ -57,33 +57,51 @@
     <p>กำลังโหลดข้อมูล...</p>
   </div>
 
-  <script>
-    fetch('/api/get-logs')
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById('logContainer');
-        container.innerHTML = ''; // ล้างข้อความ "กำลังโหลด..."
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
-        if (data.length === 0) {
-          container.innerHTML = "<p>ยังไม่มีรายการคำขอ</p>";
-          return;
-        }
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHgpqApo8nL3yL4aTkT0wutpb6sgRIs7M",
+      authDomain: "permit-app-4969b.firebaseapp.com",
+      databaseURL: "https://permit-app-4969b-default-rtdb.firebaseio.com",
+      projectId: "permit-app-4969b",
+      storageBucket: "permit-app-4969b.appspot.com",
+      messagingSenderId: "721297118613",
+      appId: "1:721297118613:web:7ff76a2f258db68e0b529c"
+    };
 
-        data.forEach((item, index) => {
-          const div = document.createElement("div");
-          div.className = "log-entry";
-          div.innerHTML = `
-            <strong>ชื่อ:</strong> ${item.fullname}<br/>
-            <strong>เบอร์โทร:</strong> ${item.phone}<br/>
-            <strong>ที่อยู่:</strong> ${item.location}<br/>
-            <strong>แนบไฟล์:</strong> ${item.document || '-'}<br/>
-          `;
-          container.appendChild(div);
-        });
-      })
-      .catch(err => {
-        document.getElementById('logContainer').innerHTML = "<p>เกิดข้อผิดพลาดในการโหลดข้อมูล</p>";
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const container = document.getElementById('logContainer');
+
+    onValue(ref(db, 'requests'), snapshot => {
+      const data = snapshot.val();
+      container.innerHTML = "";
+
+      if (!data) {
+        container.innerHTML = "<p>ยังไม่มีรายการคำขอ</p>";
+        return;
+      }
+
+      const items = Object.values(data).reverse();
+
+      items.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "log-entry";
+        div.innerHTML = `
+          <strong>ชื่อ:</strong> ${item.fullname}<br/>
+          <strong>เบอร์โทร:</strong> ${item.phone}<br/>
+          <strong>ที่อยู่:</strong> ${item.location}<br/>
+          <strong>วันที่:</strong> ${new Date(item.date).toLocaleString("th-TH")}
+        `;
+        container.appendChild(div);
       });
+    }, err => {
+      container.innerHTML = "<p>เกิดข้อผิดพลาดในการโหลดข้อมูล</p>";
+    });
   </script>
 
 </body>
