@@ -1,147 +1,166 @@
-<!<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <title>ระบบขออนุญาตก่อสร้าง ดัดแปลง รื้อถอน หรือเคลื่อนย้ายอาคาร องค์การบริหารส่วนตำบลบึงบา</title>
-    <style>
-        body {
-            font-family: "Segoe UI", sans-serif;
-            background-color: #f1f1f1;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <title>ระบบขออนุญาตก่อสร้าง ดัดแปลง รื้อถอน หรือเคลื่อนย้ายอาคาร องค์การบริหารส่วนตำบลบึงบา</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f1f1f1;
+      margin: 0;
+      padding: 0;
+    }
 
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            background-color: #ffffff;
-            padding: 15px 30px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      background-color: #ffffff;
+      padding: 15px 30px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
 
-        header img {
-            height: 70px;
-        }
+    header img {
+      height: 70px;
+    }
 
-        .title-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    .title-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        header h1 {
-            margin: 0;
-            font-size: 22px;
-            color: #2c3e50;
-        }
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+      color: #2c3e50;
+    }
 
-        header h2 {
-            margin: 0;
-            font-weight: normal;
-            font-size: 16px;
-            color: #555;
-        }
+    header h2 {
+      margin: 0;
+      font-weight: normal;
+      font-size: 16px;
+      color: #555;
+    }
 
-        .container {
-            max-width: 500px;
-            margin: 40px auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
+    /* ปุ่มลิงก์ไป form.html */
+    .link-button {
+      background-color: #28a745;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 16px;
+      display: inline-block;
+      margin-top: 24px;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
 
-        input[type="text"],
-        textarea,
-        input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-        }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
 
-        textarea {
-            resize: vertical;
-            height: 80px;
-        }
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
 
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 6px;
-            width: 100%;
-            font-size: 16px;
-            cursor: pointer;
-        }
+    textarea {
+      resize: vertical;
+      height: 80px;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
 
-<header>
+  <header>
     <img src="img/logobuengba.png" alt="โลโก้ อบต.บึงบา">
     <div class="title-group">
-        <h1>ระบบขออนุญาตก่อสร้าง ดัดแปลง รื้อถอน หรือเคลื่อนย้ายอาคาร</h1>
-        <h2>องค์การบริหารส่วนตำบลบึงบา</h2>
+      <h1>ระบบขออนุญาตก่อสร้าง ดัดแปลง รื้อถอน หรือเคลื่อนย้ายอาคาร</h1>
+      <h2>องค์การบริหารส่วนตำบลบึงบา</h2>
     </div>
-</header>
+  </header>
 
-<div class="container">
+  <!-- ✅ ปุ่มลิงก์ไปยัง form.html -->
+  <div style="text-align: center;">
+    <a href="form.html" class="link-button">📝 ยื่นแบบคำขอ (ข.1)</a>
+  </div>
+
+  <div class="container">
     <form id="permit-form">
-        <label for="fullname">ชื่อผู้ยื่นคำขอ</label>
-        <input type="text" id="fullname" name="fullname" required>
+      <label for="fullname">ชื่อผู้ยื่นคำขอ</label>
+      <input type="text" id="fullname" name="fullname" required>
 
-        <label for="phone">เบอร์โทรศัพท์</label>
-        <input type="text" id="phone" name="phone" required>
+      <label for="phone">เบอร์โทรศัพท์</label>
+      <input type="text" id="phone" name="phone" required>
 
-        <label for="location">ที่อยู่ของสถานที่ก่อสร้าง</label>
-        <textarea id="location" name="location" required></textarea>
+      <label for="location">ที่อยู่ของสถานที่ก่อสร้าง</label>
+      <textarea id="location" name="location" required></textarea>
 
-        <button type="submit">📬 ส่งคำขอ</button>
+      <button type="submit">📬 ส่งคำขอ</button>
     </form>
-</div>
+  </div>
 
-<script>
-document.getElementById('permit-form').addEventListener('submit', async function(e) {
-  e.preventDefault(); // ✅ ป้องกันหน้ารีเฟรช
+  <script>
+    document.getElementById('permit-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
 
-  const form = document.getElementById('permit-form');
-  const formData = new FormData(form);
+      const form = document.getElementById('permit-form');
+      const formData = new FormData(form);
 
-  try {
-    const res = await fetch("/api/submit", {
-      method: "POST",
-      body: formData
+      try {
+        const res = await fetch("/api/submit", {
+          method: "POST",
+          body: formData
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          alert(result.message || "✅ ส่งคำขอสำเร็จ");
+          form.reset();
+        } else {
+          alert(result.message || "❌ ส่งคำขอไม่สำเร็จ");
+        }
+
+      } catch (err) {
+        alert("❌ เกิดข้อผิดพลาดในการส่งคำขอ");
+        console.error(err);
+      }
     });
+  </script>
 
-    const result = await res.json();
-
-    if (res.ok) {
-      alert(result.message || "✅ ส่งคำขอสำเร็จ");
-      form.reset(); // ✅ เคลียร์ข้อมูลฟอร์มหลังส่ง
-    } else {
-      alert(result.message || "❌ ส่งคำขอไม่สำเร็จ");
-    }
-
-  } catch (err) {
-    alert("❌ เกิดข้อผิดพลาดในการส่งคำขอ");
-    console.error(err);
-  }
-});
-</script>
+</body>
+</html>
