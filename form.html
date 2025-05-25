@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>แบบคำขออนุญาตก่อสร้าง (ข.1)</title>
+  <style>
+    body { font-family: 'Sarabun', sans-serif; margin: 0; padding: 20px; background: #f2f2f2; }
+    .form-container { background: #fff; padding: 20px; border-radius: 10px; max-width: 700px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    h2 { text-align: center; margin-bottom: 30px; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input, textarea, select {
+      width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;
+    }
+    button {
+      background: #0066cc; color: white; padding: 10px 20px; border: none;
+      border-radius: 5px; margin-top: 20px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>แบบคำขออนุญาตก่อสร้าง (ข.1)</h2>
+    <form id="permitForm">
+      <label>ชื่อ - สกุลผู้ขอ</label>
+      <input type="text" id="fullname" required>
+
+      <label>เลขประจำตัวประชาชน</label>
+      <input type="text" id="idcard" required>
+
+      <label>ที่อยู่ตามบัตรประชาชน</label>
+      <textarea id="address" rows="2"></textarea>
+
+      <label>ประเภทคำขอ</label>
+      <select id="request_type">
+        <option>ก่อสร้าง</option>
+        <option>ดัดแปลง</option>
+        <option>รื้อถอน</option>
+        <option>เคลื่อนย้าย</option>
+      </select>
+
+      <label>สถานที่ก่อสร้าง</label>
+      <textarea id="location" rows="2"></textarea>
+
+      <label>เบอร์โทรศัพท์</label>
+      <input type="text" id="phone">
+
+      <label>วันที่ยื่นคำขอ</label>
+      <input type="date" id="submit_date">
+
+      <label>แนบไฟล์สำเนาบัตรประชาชน</label>
+      <input type="file" id="idcardFile">
+
+      <label>แนบไฟล์แบบแปลน</label>
+      <input type="file" id="planFile">
+
+      <button type="submit">ส่งคำขอ</button>
+    </form>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHgpqApo8nL3yL4aTkT0wutpb6sgRIs7M",
+      authDomain: "permit-app-4969b.firebaseapp.com",
+      databaseURL: "https://permit-app-4969b-default-rtdb.firebaseio.com",
+      projectId: "permit-app-4969b",
+      storageBucket: "permit-app-4969b.appspot.com",
+      messagingSenderId: "721297118613",
+      appId: "1:721297118613:web:7ff76a2f258db68e0b529c",
+      measurementId: "G-Z5NR3MD7TZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const storage = getStorage(app);
+
+    document.getElementById("permitForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const fullname = document.getElementById("fullname").value;
+      const idcard = document.getElementById("idcard").value;
+      const address = document.getElementById("address").value;
+      const request_type = document.getElementById("request_type").value;
+      const location = document.getElementById("location").value;
+      const phone = document.getElementById("phone").value;
+      const submit_date = document.getElementById("submit_date").value;
+      const idcardFile = document.getElementById("idcardFile").files[0];
+      const planFile = document.getElementById("planFile").files[0];
+
+      const newRef = push(ref(db, "requests"));
+      const key = newRef.key;
+
+      let idcardFileUrl = "";
+      let planFileUrl = "";
+
+      if (idcardFile) {
+        const idcardRef = sRef(storage, "requests/" + key + "/idcard_" + idcardFile.name);
+        await uploadBytes(idcardRef, idcardFile);
+        idcardFileUrl = await getDownloadURL(idcardRef);
+      }
+
+      if (planFile) {
+        const planRef = sRef(storage, "requests/" + key + "/plan_" + planFile.name);
+        await uploadBytes(planRef, planFile);
+        planFileUrl = await getDownloadURL(planRef);
+      }
+
+      await push(ref(db, "requests"), {
+        fullname, idcard, address, request_type, location, phone, submit_date,
+        timestamp: new Date().toISOString(),
+        files: {
+          idcard_file_url: idcardFileUrl,
+          plan_file_url: planFileUrl
+        }
+      });
+
+      alert("✅ ส่งคำขอเรียบร้อยแล้ว");
+      document.getElementById("permitForm").reset();
+    });
+  </script>
+</body>
+</html>

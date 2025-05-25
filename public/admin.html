@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title>รายการคำขออนุญาตก่อสร้าง ดัดแปลง รื้อถอน หรือเคลื่อนย้ายอาคาร องค์การบริหารส่วนตำบลบึงบา</title>
+  <title>รายการคำขออนุญาตก่อสร้าง ดัดแปลง รื้อถอน หรือเคลื่อนย้ายอาคาร อบต.บึงบา</title>
   <style>
     body {
       font-family: "Segoe UI", sans-serif;
@@ -45,12 +45,26 @@
       display: inline-block;
       width: 120px;
     }
+
+    .link-button {
+      background-color: #0066cc;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
 
   <div class="center-title">
     รายการคำขออนุญาตก่อสร้าง ดัดแปลง รื้อถอน หรือเคลื่อนย้ายอาคาร องค์การบริหารส่วนตำบลบึงบา
+  </div>
+
+  <div style="text-align: center; margin-top: 10px;">
+    <a href="form.html" class="link-button">📝 ยื่นแบบคำขอ (ข.1)</a>
   </div>
 
   <div style="text-align: center; margin: 20px;">
@@ -72,7 +86,7 @@
       authDomain: "permit-app-4969b.firebaseapp.com",
       databaseURL: "https://permit-app-4969b-default-rtdb.firebaseio.com",
       projectId: "permit-app-4969b",
-      storageBucket: "permit-app-4969b.appspot.com", // ✅ แก้ตรงนี้
+      storageBucket: "permit-app-4969b.appspot.com",
       messagingSenderId: "721297118613",
       appId: "1:721297118613:web:7ff76a2f258db68e0b529c",
       measurementId: "G-Z5NR3MD7TZ"
@@ -97,12 +111,13 @@
 
         const card = document.createElement("div");
         card.classList.add("log-entry");
-      card.innerHTML = `
-  <p><strong>ชื่อ:</strong> ${Object.values(val.fullname || {})[0] || "-"}</p>
-  <p><strong>เบอร์โทร:</strong> ${Object.values(val.phone || {})[0] || "-"}</p>
-  <p><strong>ที่อยู่:</strong> ${Object.values(val.location || {})[0] || "-"}</p>
-  <p><strong>วันที่:</strong> ${val.date ? new Date(val.date).toLocaleString("th-TH") : "-"}</p>
-`;
+
+        card.innerHTML = `
+          <p><strong>ชื่อ:</strong> ${(val.fullname && val.fullname["0"]) || val.fullname || "-"}</p>
+          <p><strong>เบอร์โทร:</strong> ${(val.phone && val.phone["0"]) || val.phone || "-"}</p>
+          <p><strong>ที่อยู่:</strong> ${(val.location && val.location["0"]) || val.address || "-"}</p>
+          <p><strong>วันที่:</strong> ${val.submit_date ? new Date(val.submit_date).toLocaleDateString("th-TH") : "-"}</p>
+        `;
 
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "🗑️ ลบรายการนี้";
