@@ -119,26 +119,29 @@
 
 <script>
 document.getElementById('permit-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
+  e.preventDefault(); // ✅ ป้องกันหน้ารีเฟรช
 
-    const data = {
-        fullname: document.getElementById('fullname').value,
-        phone: document.getElementById('phone').value,
-        location: document.getElementById('location').value,
-    };
+  const form = document.getElementById('permit-form');
+  const formData = new FormData(form);
 
-    try {
-        const res = await fetch("/api/submit", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
+  try {
+    const res = await fetch("/api/submit", {
+      method: "POST",
+      body: formData
+    });
 
-        const result = await res.json();
-        alert(result.message || "❌ ส่งคำขอไม่สำเร็จ");
-    } catch (err) {
-        alert("❌ เกิดข้อผิดพลาดในการส่งคำขอ");
+    const result = await res.json();
+
+    if (res.ok) {
+      alert(result.message || "✅ ส่งคำขอสำเร็จ");
+      form.reset(); // ✅ เคลียร์ข้อมูลฟอร์มหลังส่ง
+    } else {
+      alert(result.message || "❌ ส่งคำขอไม่สำเร็จ");
     }
+
+  } catch (err) {
+    alert("❌ เกิดข้อผิดพลาดในการส่งคำขอ");
+    console.error(err);
+  }
 });
+</script>
